@@ -1,0 +1,16 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="WX.无锡rrt_发布文章.login" />
+          <option value="WX.wxrrt_login_checkout.wx_login" />
+          <option value="test_case.login_case.TestCase1" />
+          <option value="test_case.test_login.self" />
+          <option value="test_case.test_jwjx.TestCase1.driver" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
