@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 
 # url = "http://157.0.0.59:50131/login"
 
-class DeyuPage(Base):
+class deyuPage(Base):
     # 定位器，定位页面元素
     zhfw_link = (By.LINK_TEXT, "综合服务")  # 综合服务
     jwjx_link = (By.LINK_TEXT, "教务教学")  # 教务教学
@@ -30,14 +30,15 @@ class DeyuPage(Base):
     zb = (By.CSS_SELECTOR, "span.radio-box clearfix fl ml90>span.myRadio active>i")  # 指标单选按钮
     add__ = (By.CSS_SELECTOR, "form:nth-child(1)>div.input clearfix>span.radio-box clearfix fl>span>i")  # 加分单选
     deduction = (By.CSS_SELECTOR, "form:nth-child(1)>div.input clearfix>span.radio-box clearfix fl ml90>span>i")  # 减分单选
-    jskp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(1)>span>i")  # 教师考评checkBox
-    stuzp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(2)>span>i")  # 学生自评checkBox
-    stuhp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(3)>span>i")  # 学生互评checkBox
-    parentkp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(4)>span>i")  # 家长考评checkBox
+    #jskp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(1)>span>i")  # 教师考评checkBox
+    #stuzp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(2)>span>i")  # 学生自评checkBox
+    #stuhp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(3)>span>i")  # 学生互评checkBox
+    #parentkp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(4)>span>i")  # 家长考评checkBox
     input1 = (By.CSS_SELECTOR, "from>div.add-item pointScope>div.input>input.fromPoint")  # 加分范围输入框from
     input2 = (By.CSS_SELECTOR, "from>div.add-item pointScope>div.input>input.toPoint")  # 加分范围输入框to
     text_area = (By.CSS_SELECTOR, "div.add-item:nth-child(3)>div.input>textarea.describe")  # 描述输入框
     save_bt = (By.CSS_SELECTOR, "div.moral-type-deal>div.ctlSpace>span.borderCheck save")  # 保存按钮
+
 
     def input_jwjx(self):
 
@@ -71,10 +72,19 @@ class DeyuPage(Base):
         else:
             print("请选择正确分制")
 
-    def select_kp(self, category, *args):
+    def check_box_byName(self, name):
 
-        # 选择考评方式：教师考评、学生自评、学生互评、家长考评(category传入的文本)
-        pass
+        #选择单个考评方式
+        ele = self.driver.find_element_by_xpath("//span[contains(@class, 'check-box')]"
+                                          "/label[text()='%s']/fllowing-sibling::"
+                                          "span[@class='myCheckBox']/i" % name)
+        ele.click()
+
+    def check_box_byTuple(self, *args):
+
+        # 选择考评方式：教师考评、学生自评、学生互评、家长考评(*args作为元组传递参数)
+        for i in args:
+            self.check_box_byName(args[i])
 
     def input_total(self, total):
 
@@ -110,47 +120,49 @@ class DeyuPage(Base):
         # 如果传入的参数是分类：
 
         try:
+            pass
 
-        # 输入名称
 
-        # 点击选择分类按钮
+            # 输入名称
 
-        # 输入描述信息
+            # 点击选择分类按钮
 
-        # 保存   print(成功添加分类%s名称)
+            # 输入描述信息
+
+            # 保存   print(成功添加分类%s名称)
 
         except Exception as a:
             print(a)
 
             # 如果是指标：
 
-        try:
-        # 1.输入名称
+               # try:
+                   # pass
 
-        # 2.点击选择指标按钮
+                    # 1.输入名称
 
-        # 3.点击选择加分or减分
+                     # 2.点击选择指标按钮
 
-        # 4.选择考评方式
+                    # 3.点击选择加分or减分
 
-        # 5.输入总分值
+                    # 4.选择考评方式
 
-        # 6.输入分值范围
+                    # 5.输入总分值
 
-        # 7.描述
+                    # 6.输入分值范围
 
-        # 8.保存
+                    # 7.描述
 
-        # 9.print()
+                    # 8.保存
 
-
-        except Exception as a:
-            print(a)
-
-    def login(self, username, psw, captcha):
+                    # 9.print()
+               # except Exception:
+                   # pass
+   ''' def login(self, username, psw, captcha):
 
         # 登录方法
         self.input_username(username)
         self.input_psw(psw)
         self.input_captcha(captcha)
         self.click_submit()
+'''
