@@ -48,7 +48,7 @@ class Base(object):
         except Exception as msg:
             print("Error:%s" % msg)
 
-    def find_element(self, locator, timeout=10):
+    def find_element(self, locator, timeout=20):
 
         # 定位元素，参数locator是一组参数（"id","username"）
         element = WebDriverWait(self.driver, timeout, 1).until(EC.presence_of_element_located(locator))
