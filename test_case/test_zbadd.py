@@ -22,10 +22,21 @@ class Testcase1(unittest.TestCase):
         self.log_in.login("szss", "111111", "3597")
 
 
-    def addzb_case(self, mname, taget_t, jname, scor_text, description,  tot_scor, from_scor, expect=True, *args):
+    def addzb_case(self, mname, taget_t, jname, scor_text, description, tot_scor, from_scor, expect=True, *args):
 
         '''标准设置添加指标或分类'''
-        self.ad_zb.addzb(mname, taget_t, jname, scor_text, description, tot_scor, from_scor,*args)
+        #1.点击进入教务教学
+        self.ad_zb.input_jwjx()
+        #2.打开标准设置页面
+        #self.ad_zb.open_bzsz()
+        #3.选择德育分类下的添加按钮
+        self.ad_zb.dy_menu(mname)
+        #4.添加分类或指标
+        self.ad_zb.select_jd(taget_t,jname,scor_text,description,tot_scor,from_scor,args)
+        #5.保存
+        self.ad_zb.click_save()
+
+        #self.ad_zb.addzb(mname, taget_t, jname, scor_text, description, tot_scor, from_scor,*args)
 
     def test_add1(self):
 

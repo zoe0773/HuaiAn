@@ -36,11 +36,11 @@ class Base(object):
         '''默认启动Chrome浏览器'''
         self.driver = driver
 
-    def open(self, url, t='', timeout=10):
+    def open(self, url, t='', timeout=20):
 
         # 使用get打开URL后，最大化窗口，判断title符合预期正确的title
         self.driver.get(url)
-        #self.driver.maximize_window()
+        self.driver.maximize_window()
         try:
             WebDriverWait(self.driver, timeout, 1).until(EC.title_contains(t))
         except TimeoutException:
