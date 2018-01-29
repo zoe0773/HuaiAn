@@ -13,19 +13,20 @@ class DeyuPage(Base):
     zhfw_link = (By.LINK_TEXT, "综合服务")  # 综合服务
     jwjx_link = (By.LINK_TEXT, "教务教学")  # 教务教学
     # bzsz_link = (By.XPATH, "")  # 标准设置
-    label_fl = (By.CSS_SELECTOR, "div.add-item nodeType>div>span(1)>label")  # <label>分类</label>
-    label_zb = (By.CSS_SELECTOR, "div.add-item nodeType>div>span(2)>label")  # <label>指标</label>
-    label_add = (By.CSS_SELECTOR, "div.add-item scoreStrategy>div>span(1)>label")  # <label>加分</label>
+    label_fl = (By.CSS_SELECTOR, "div.add-item.nodeType>div>span:nth-child(1)>label")  # <label>分类</label>
+    label_zb = (By.CSS_SELECTOR, "div.add-item.nodeType>div>span(2)>label")  # <label>指标</label>
+    label_add = (By.CSS_SELECTOR, "div.add-item.scoreStrategy > div > span:nth-child(1) > label")  # <label>加分</label>
     zb_name = (By.CSS_SELECTOR, "input.name")  # 指标名称输入框
-    tot = (By.CSS_SELECTOR, "from>div.add-item>div.input>input.totalScore")  # 总分输入框
-    fl = (By.CSS_SELECTOR, "div.input clearfix>span.radio-box.clearfix.fl>span>i")  # 分类单选按钮
+    tot = (By.CSS_SELECTOR, "div:nth-child(3)>div>input")  # 总分输入框
+    fl = (By.CSS_SELECTOR, "div.add-item.nodeType > div > span:nth-child(1) > span > i")  # 分类单选按钮
     zb = (By.CSS_SELECTOR, "span.radio-box.clearfix.fl.ml90>span[name=\"node-type\"] > i")  # 指标单选按钮
-    add__ = (By.CSS_SELECTOR, "form:nth-child(1)>div.input.clearfix>span.radio-box.clearfix.fl>span>i")  # 加分单选
-    deduction = (By.CSS_SELECTOR, "form:nth-child(1)>div.input.clearfix>span.radio-box.clearfix.fl.ml90>span>i")  # 减分单选
-    input1 = (By.CSS_SELECTOR, "from>div.add-item.pointScope>div.input>input.fromPoint")  # 加分范围输入框from
-    input2 = (By.CSS_SELECTOR, "from>div.add-item.pointScope>div.input>input.toPoint")  # 加分范围输入框to
-    text_area = (By.CSS_SELECTOR, "div.add-item:nth-child(3)>div.input>textarea.describe")  # 描述输入框
-    save_bt = (By.CSS_SELECTOR, "div.moral-type-deal>div.ctlSpace>span.borderCheck save")  # 保存按钮
+    add__ = (By.CSS_SELECTOR, "div.add-item.scoreStrategy>div>span:nth-child(1)>span>i")  # 加分单选
+    deduction = (By.CSS_SELECTOR, "div.add-item.scoreStrategy > div > span.radio-box.clearfix.fl.ml90 > span > i")  # 减分单选
+    input1 = (By.CSS_SELECTOR, "div.add-item.pointScope>div>input.fromPoint")  # 加分范围输入框from
+    input2 = (By.CSS_SELECTOR, "div.add-item.pointScope>div>input.toPoint")  # 加分范围输入框to
+    text_area = (By.CSS_SELECTOR, "div.standard-deal.moral-standard.none>div>div.item-box>div:nth-child(5)>div>textarea")  # 描述输入框
+
+    save_bt = (By.CSS_SELECTOR, "div>div.ctlSpace>span.borderCheck.save")  # 保存按钮
     dyfl_add = (By.XPATH,
                 "//div[@class='moral-tree-list']/ul/li/ul/li[@class='active']/following-sibling::li/div[2]/div[class='node-ctl']/span[1]")
     sz_url = "http://157.0.0.59:50251/reps-moral-http/html/standard-base/standard-setting.html"
@@ -73,15 +74,18 @@ class DeyuPage(Base):
         time.sleep(10)
 
         # 选择单个考评方式
-        ele = self.driver.find_element_by_xpath("//span[contains(@class, 'check-box')]"
-                                                "/label[text()='%s']/fllowing-sibling::"
-                                                "span[@class='myCheckBox']/i" % name)
+        ele = self.driver.find_element_by_xpath("//div[2]/div/span[1]/label[text()='%s']/following-sibling::span/i"%name)
         ele.click()
-    def check_box_byTuple(self, *args):
-        # 选择考评方式：教师考评、学生自评、学生互评、家长考评(*args作为元组传递参数)
-        for i in args:
-            self.check_box_byName(args[i])
 
+    def check_box_byTuple(self, args):
+        # 选择考评方式：教师考评、学生自评、学生互评、家长考评(*args作为元组传递参数)
+        for i in args:      #直接遍历
+            self.check_box_byName(i)
+        '''
+        for i in range(len(args)):    #tuple类型遍历
+            print(args[i])
+            self.check_box_byName(args[i])
+        '''
 
     def input_score(self, total, sco_from):
         # 输入总分
@@ -101,30 +105,33 @@ class DeyuPage(Base):
         self.click(self.save_bt)
 
 
-    def select_jd(self, taget_text, name, scor_text, des, total, sco_from, *args):  # 节点文本jdname;des描述,scor_text加减分
+    def select_jd(self, taget_text, name, scor_text, des, total, sco_from, args):  # 节点文本jdname;des描述,scor_text加减分
 
-        # 选择节点类型
-        if self.is_text_in_element(self.label_fl, taget_text):  # 如果传入的文本包含在获取的元素的.text里
-            self.click(self.fl)  # 选择分类单选按钮
-            self.input_name(name)  # 输入分类名称
-            self.input_text_area(des)  # 添加描述
+            # 选择节点类型
+
+        fl_text = self.find_element(self.label_fl).text #获取标签的文本  分类
+        if  fl_text == taget_text:
+            self.click(self.fl)         # 选择分类单选按钮
+            self.input_name(name)       # 输入分类名称
+            self.input_text_area(des)   # 添加描述
         else:
             # 选择指标按钮
             self.click(self.zb)
             # 输入指标名称
             self.input_name(name)
             # 选择加/减分制
-            if self.is_text_in_element(self.label_add, scor_text):
-                self.click(self.add__)
+            fz_text = self.find_element(self.label_add).text  #获取标签文本 加分
+            if fz_text == scor_text:
+                self.click(self.add__)    #点击选择加分单选按钮
             else:
-                self.click(self.deduction)
+                self.click(self.deduction)  #点击选择减分单选按钮
             # 选择考评方式
             self.check_box_byTuple(args)
             self.input_score(total, sco_from)
             self.input_text_area(des)
 
 
-    def addzb(self, menuname, taget_text, name, scor_text, description, total_scor=2, from_scor=1, *args):
+    def addzb(self, menuname, taget_text, name, scor_text, description,  args,total_scor=2, from_scor=1):
         # 1.登录后定位综合服务 hover
         # 2.点击教务教学
         self.input_jwjx()
@@ -133,6 +140,12 @@ class DeyuPage(Base):
         # 4.选择德育分类，点击此分类后的添加按钮
         self.dy_menu(menuname)
         # 5.判断用户要添加的节点类型是分类还是指标 （分类/指标， 加分/减分， 考评方式）
-        self.select_jd(taget_text, name, scor_text, description, total_scor, from_scor, *args)
+        self.select_jd(taget_text, name, scor_text, description, total_scor, from_scor, args)
         # 6.保存
         self.click_save()
+'''
+    def addfl(self, menuname, taget_text, name, description):
+        self.input_jwjx()
+        self.dy_menu(menuname)
+        
+'''

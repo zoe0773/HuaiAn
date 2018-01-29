@@ -5,9 +5,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 import time
 from test_case.po.base import Base
 from selenium.webdriver.common.by import By
+from test_case.po.deyu_page import DeyuPage
 
 dri = webdriver.Chrome()
 base_ = Base(dri)
+deyu = DeyuPage(dri)
 # 启动浏览器后获取cookies
 #print(dri.get_cookies()
 zbname = (By.CSS_SELECTOR, "span.radio-box.clearfix.fl.ml90 > span[name='node-type'] > i")
@@ -23,30 +25,56 @@ dri.find_element_by_xpath("//div[@class='zjg-login-btn']/input").click()
 # print(dri.get_cookies())
 time.sleep(5)
 dri.get("http://157.0.0.59:50251/reps-moral-http/html/standard-base/standard-setting.html")
-time.sleep(20)
+time.sleep(10)
 
 
 def xsdy(name):
     dri.find_element_by_xpath("//div[@class='moral-tree-list']/ul/li/ul/li[@class='active']/following-sibling::li/div[2]/span/label[text()='%s']"%name).click()
-    #//div[@class='moral-tree-list']/ul/li/ul/li[@class='active']/following-sibling::li/div[@class='tree-node selected-style']/span/label[text()='%s'
+
 xsdy("学生德育")
 time.sleep(5)
+#点击学生德育后的新增按钮
 dri.find_element_by_css_selector("div.tree-node.selected-style>div.node-ctl>span").click()
 time.sleep(10)
 #定位指标单选按钮
 base_.click(zbname)
+time.sleep(10)
+#获取分类label标签文本
+#ttt = base_.find_element(deyu.label_fl).text
+#print(ttt)
+
+#选择加分label标签
+t = base_.find_element(deyu.label_add).text
+print(t)
+
+#点击加分按钮
+base_.click(deyu.add__)
+print("已定位加分按钮")
+
+#点击教师考评复选框
+dri.find_element_by_xpath("//div[2]/div/span[1]/label[text()='教师考评']/following-sibling::span/i").click()
+print("考评方式定位成功")
+
+
+
+
+'''
+#tuple 遍历
+args = ("abc")
+for i in range(len(args)):
+    print(args[i])
+输出结果：
+a
+b
+c
+
+args = ("abc" , )  #tuple类型
+for i in range(len(args)):
+    print(args[i])
+输出结果：
+abc   
+'''
 
 time.sleep(20)
 dri.quit()
 
-# jskp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(1)>span>i")  # 教师考评checkBox
-# stuzp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(2)>span>i")  # 学生自评checkBox
-# stuhp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(3)>span>i")  # 学生互评checkBox
-# parentkp = (By.CSS_SELECTOR, "div.add-item checkType>div.input clearfix:nth-child(4)>span>i")  # 家长考评checkBox
-# label_ded = (By.CSS_SELECTOR, "div.add-item scoreStrategy>div>span(2)>label")  # <label>减分</label>
-# bjdy = (By.CSS_SELECTOR, "li.active:nth-child(1)>div.tree-node selected-style>span>label.node-name")  # 班级德育分类
-# bjdy_ad = (By.CSS_SELECTOR, "li.active:nth-child(1)>div.tree-node selected-style hoverStyle>div.node-ctl>span[1]")  # 指标添加按钮
-# xsdy = (By.CSS_SELECTOR, "li.active:nth-child(2)>div.tree-node selected-style>span>label.node-name")  # 学生德育分类
-# xsdy_ad = (By.CSS_SELECTOR, "li.active:nth-child(2)>div.tree-node selected-style hoverStyle>div.node-ctl>span[1]")  # 指标添加按钮
-# jsdy = (By.CSS_SELECTOR, "li.active:nth-child(3)>div.tree-node selected-style>span>label.node-name")  # 教师德育分类
-# jsdy_ad = (By.CSS_SELECTOR, "li.active:nth-child(3)>div.tree-node selected-style hoverStyle>div.node-ctl>span[1]")  # 指标添加按钮

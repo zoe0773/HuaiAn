@@ -71,7 +71,6 @@ class TestCase1(unittest.TestCase):
         '''只输入正确的验证码'''
         self.login_case("", "", "3597", False)
 
-
     def test_login07(self):
         # 无效等价类
         '''输入正确的用户名密码，错误的验证码'''
