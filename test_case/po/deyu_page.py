@@ -25,11 +25,15 @@ class DeyuPage(Base):
     input1 = (By.CSS_SELECTOR, "div.add-item.pointScope>div>input.fromPoint")  # 加分范围输入框from
     input2 = (By.CSS_SELECTOR, "div.add-item.pointScope>div>input.toPoint")  # 加分范围输入框to
     text_area = (By.CSS_SELECTOR, "div.standard-deal.moral-standard.none>div>div.item-box>div:nth-child(5)>div>textarea")  # 描述输入框
-
     save_bt = (By.CSS_SELECTOR, "div>div.ctlSpace>span.borderCheck.save")  # 保存按钮
     dyfl_add = (By.XPATH,
                 "//div[@class='moral-tree-list']/ul/li/ul/li[@class='active']/following-sibling::li/div[2]/div[class='node-ctl']/span[1]")
     sz_url = "http://157.0.0.59:50251/reps-moral-http/html/standard-base/standard-setting.html"
+    jskp = (By.CSS_SELECTOR, "div.add-item.checkType>div>pan:nth-child(1)>label")  #教师考评
+    xszp = (By.CSS_SELECTOR, "div.add-item.checkType>div>span:nth-child(2)>label") #学生自评
+    xshp = (By.CSS_SELECTOR, "div.add-item.checkType>div>span.check-box.clearfix.fl.clearL>label") #学生互评
+    jzkp = (By.CSS_SELECTOR, "div.add-item.checkType>div>span:nth-child(5)>label")  #家长考评
+
 
     def input_jwjx(self):
         # 登录后进入教务教学
@@ -58,12 +62,12 @@ class DeyuPage(Base):
         self.driver.switch_to.window(ha_all[0])
         time.sleep(4)
         self.driver.refresh()
-        WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_xpath("//div[@class='moral-tree-list']/ul/li/ul/li[@class='active']/following-sibling::li/div[2]/span/label[text()='%s']"%menu_name)).click()
+        WebDriverWait(self.driver, 15).until(lambda x: x.find_element_by_xpath("//div/div[2]/div[1]/ul/li/ul/li/div[2]/span/label[text()='%s']"%menu_name)).click()
+
         # 点击添加按钮
         time.sleep(5)
         self.driver.find_element_by_css_selector("div.tree-node.selected-style > div.node-ctl > span").click()
-        #WebDriverWait(self.driver, 20).until(lambda x: x.find_element_by_xpath("//div[@class='moral-tree-list']/ul/li/ul/li[@class='active']/div[2]/div[class='node-ctl']/span[1]").click()
-        time.sleep(10)
+        time.sleep(6)
 
     def input_name(self, name):
         # 输入指标名称
@@ -74,18 +78,21 @@ class DeyuPage(Base):
         time.sleep(10)
 
         # 选择单个考评方式
-        ele = self.driver.find_element_by_xpath("//div[2]/div/span[1]/label[text()='%s']/following-sibling::span/i"%name)
+        ele = self.driver.find_element_by_xpath("//div[2]/div/span/label[text()='%s']/following-sibling::span/i"%name)
         ele.click()
 
-    def check_box_byTuple(self, args):
+    def check_box_byTuple(self, *args):
         # 选择考评方式：教师考评、学生自评、学生互评、家长考评(*args作为元组传递参数)
         for i in args:      #直接遍历
+            print(i)
             self.check_box_byName(i)
+
+
         '''
-        for i in range(len(args)):    #tuple类型遍历
+        for i in range(len(*args)):
             print(args[i])
-            self.check_box_byName(args[i])
-        '''
+            self.check_box_byName(*args[i])
+'''
 
     def input_score(self, total, sco_from):
         # 输入总分
@@ -105,7 +112,7 @@ class DeyuPage(Base):
         self.click(self.save_bt)
 
 
-    def select_jd(self, taget_text, name, scor_text, des, total, sco_from, args):  # 节点文本jdname;des描述,scor_text加减分
+    def select_jd(self, taget_text, name, scor_text, des, total, sco_from, *args):  # 节点文本jdname;des描述,scor_text加减分
 
             # 选择节点类型
 
@@ -126,10 +133,10 @@ class DeyuPage(Base):
             else:
                 self.click(self.deduction)  #点击选择减分单选按钮
             # 选择考评方式
-            self.check_box_byTuple(args)
+            self.check_box_byTuple(*args)   #传递不定长参数前面需要加*  解包
             self.input_score(total, sco_from)
             self.input_text_area(des)
-
+'''
 
     def addzb(self, menuname, taget_text, name, scor_text, description,  args,total_scor=2, from_scor=1):
         # 1.登录后定位综合服务 hover
@@ -143,9 +150,4 @@ class DeyuPage(Base):
         self.select_jd(taget_text, name, scor_text, description, total_scor, from_scor, args)
         # 6.保存
         self.click_save()
-'''
-    def addfl(self, menuname, taget_text, name, description):
-        self.input_jwjx()
-        self.dy_menu(menuname)
-        
 '''
